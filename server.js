@@ -43,7 +43,13 @@ app.post("/api/upload", upload.single("photo"), (req, res) => {
   );
   stream.end(req.file.buffer);
 });
-
+// API lấy danh sách tất cả ảnh
+app.get("/api/photos", (req, res) => {
+  db.find({}, (err, docs) => {
+    if (err) return res.status(500).json({ success: false, error: "DB error" });
+    res.json({ success: true, photos: docs });
+  });
+});
 // API lấy ảnh theo id
 app.get("/api/photo/:id", (req, res) => {
   const { id } = req.params;

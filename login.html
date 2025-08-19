@@ -1,78 +1,91 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin - Gallery Tốt Nghiệp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .login-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+      .login-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
     </style>
-</head>
-<body class="min-h-screen bg-gray-100 flex items-center justify-center">
+  </head>
+  <body class="min-h-screen bg-gray-100 flex items-center justify-center">
     <div class="max-w-sm w-full mx-4">
-        <div class="login-card rounded-2xl shadow-2xl p-8 text-white text-center">
-            <div class="mb-6">
-                <div class="text-6xl mb-4">🔑</div>
-                <h1 class="text-2xl font-bold mb-2">Admin Login</h1>
-                <p class="text-blue-100">Gallery Tốt Nghiệp 2025</p>
-            </div>
-            
-            <form id="quickLoginForm" class="space-y-4">
-                <div>
-                    <input type="password" id="quickPassword" placeholder="Nhập mật khẩu admin" 
-                           class="w-full p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-300">
-                </div>
-                
-                <button type="submit" class="w-full bg-white text-purple-600 font-semibold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors">
-                    🚀 Đăng nhập
-                </button>
-            </form>
-            
-            <div class="mt-6 pt-4 border-t border-purple-300">
-                <a href="index.html" class="text-purple-200 hover:text-white text-sm">
-                    ← Quay lại Gallery
-                </a>
-            </div>
+      <div class="login-card rounded-2xl shadow-2xl p-8 text-white text-center">
+        <div class="mb-6">
+          <div class="text-6xl mb-4">🔑</div>
+          <h1 class="text-2xl font-bold mb-2">Admin Login</h1>
+          <p class="text-blue-100">Gallery Tốt Nghiệp 2025</p>
         </div>
-        
-        <div class="mt-6 text-center text-gray-600 text-sm">
-            <p>💡 <strong>Tip:</strong> Bookmark trang này để đăng nhập nhanh!</p>
+
+        <form id="quickLoginForm" class="space-y-4">
+          <div>
+            <input
+              type="password"
+              id="quickPassword"
+              placeholder="Nhập mật khẩu admin"
+              class="w-full p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-300"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-white text-purple-600 font-semibold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            🚀 Đăng nhập
+          </button>
+        </form>
+
+        <div class="mt-6 pt-4 border-t border-purple-300">
+          <a href="index.html" class="text-purple-200 hover:text-white text-sm">
+            ← Quay lại Gallery
+          </a>
         </div>
+      </div>
+
+      <div class="mt-6 text-center text-gray-600 text-sm">
+        <p>💡 <strong>Tip:</strong> Bookmark trang này để đăng nhập nhanh!</p>
+      </div>
     </div>
 
     <script>
-        document.getElementById('quickLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('quickPassword').value;
-            
-            // Check password (same as in api-config-hosting.js)
-            if (password === 'TheSon2025!@#') {
-                // Set login session
-                sessionStorage.setItem('admin_logged_in', 'true');
-                
-                // Redirect to admin panel
-                window.location.href = 'admin.html';
-            } else {
-                alert('❌ Sai mật khẩu!');
-                document.getElementById('quickPassword').value = '';
-                document.getElementById('quickPassword').focus();
-            }
+      document
+        .getElementById("quickLoginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const password = document.getElementById("quickPassword").value;
+
+          // Check password (same as in api-config-hosting.js)
+          if (password === "123456") {
+            // Set login session
+            sessionStorage.setItem("admin_logged_in", "true");
+
+            // Redirect to admin panel
+            window.location.href = "admin.html";
+          } else {
+            alert("❌ Sai mật khẩu!");
+            document.getElementById("quickPassword").value = "";
+            document.getElementById("quickPassword").focus();
+          }
         });
-        
-        // Auto focus on password field
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('quickPassword').focus();
-        });
-        
-        // Allow Enter key to submit
-        document.getElementById('quickPassword').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('quickLoginForm').dispatchEvent(new Event('submit'));
-            }
+
+      // Auto focus on password field
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("quickPassword").focus();
+      });
+
+      // Allow Enter key to submit
+      document
+        .getElementById("quickPassword")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            document
+              .getElementById("quickLoginForm")
+              .dispatchEvent(new Event("submit"));
+          }
         });
     </script>
-</body>
+  </body>
 </html>

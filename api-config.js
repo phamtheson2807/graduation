@@ -5,10 +5,6 @@ console.log("🌐 Loading API config for hosting version...");
 
 // Configuration for hosting
 const HOSTING_CONFIG = {
-  // ImgBB API for image upload (miễn phí)
-  IMGBB_API_KEY: "a9d67b722b0b6fef72a5392838ce78da", // Đăng ký tại imgbb.com
-  IMGBB_UPLOAD_URL: "https://api.imgbb.com/1/upload",
-
   // Storage keys for localStorage
   STORAGE_KEYS: {
     PHOTOS: "graduation_photos",
