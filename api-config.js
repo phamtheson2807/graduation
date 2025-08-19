@@ -66,62 +66,50 @@ class PhotoAPIHosting {
     }
   }
 
-  // Upload photo to ImgBB
+  // Upload photo to server Node.js
   async uploadPhoto(file, caption = "", category = "ceremony") {
     try {
       if (file.size > HOSTING_CONFIG.MAX_FILE_SIZE) {
         throw new Error("File quá lớn! Tối đa 5MB");
       }
 
-      // Check current photo count
-      const currentPhotos = JSON.parse(
-        localStorage.getItem(HOSTING_CONFIG.STORAGE_KEYS.PHOTOS) || "[]"
-      );
-      if (currentPhotos.length >= HOSTING_CONFIG.MAX_IMAGES) {
-        throw new Error(`Tối đa ${HOSTING_CONFIG.MAX_IMAGES} ảnh!`);
-      }
-
-      // Upload to ImgBB
       const formData = new FormData();
-      formData.append("key", HOSTING_CONFIG.IMGBB_API_KEY);
-      formData.append("image", file);
-      formData.append("name", `graduation_${Date.now()}`);
+      formData.append("photo", file);
 
-      const response = await fetch(HOSTING_CONFIG.IMGBB_UPLOAD_URL, {
-        method: "POST",
-        body: formData,
-      });
-
+      const response = await fetch(
+        "https://graduation-8rv9.onrender.com/api/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const result = await response.json();
 
-      if (!result.success) {
-        throw new Error(
-          "Upload failed: " + (result.error?.message || "Unknown error")
-        );
+      if (!result.url) {
+        throw new Error(result.error || "Upload failed");
       }
 
       // Save photo info to localStorage
+      const currentPhotos = JSON.parse(
+        localStorage.getItem(HOSTING_CONFIG.STORAGE_KEYS.PHOTOS) || "[]"
+      );
       const photoData = {
-        id: Date.now().toString(),
-        src: result.data.url,
-        thumb: result.data.thumb?.url || result.data.url,
+        id: result.id,
+        src: result.url,
+        thumb: result.url,
         title: caption || `Ảnh tốt nghiệp ${currentPhotos.length + 1}`,
         caption: caption,
         category: category,
         uploadDate: new Date().toISOString(),
         size: file.size,
-        deleteUrl: result.data.delete_url, // For future deletion
+        shareLink: result.shareLink,
       };
-
       currentPhotos.push(photoData);
       localStorage.setItem(
         HOSTING_CONFIG.STORAGE_KEYS.PHOTOS,
         JSON.stringify(currentPhotos)
       );
-
-      // Update stats
       this.updateStats();
-
       return {
         success: true,
         photo: photoData,
@@ -204,9 +192,18 @@ class PhotoAPIHosting {
     };
   }
 
-  // Get image URL (already full URL from ImgBB)
-  getImageURL(src) {
-    return src; // ImgBB returns full URLs
+  // Get image URL từ server Node.js
+  async getImageURL(id) {
+    try {
+      const response = await fetch(
+        `https://graduation-8rv9.onrender.com/api/photo/${id}`
+      );
+      const result = await response.json();
+      return result.url;
+    } catch (error) {
+      console.error("Get image URL error:", error);
+      return null;
+    }
   }
 
   // Clear all data (admin function)

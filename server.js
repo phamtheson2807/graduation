@@ -36,7 +36,7 @@ app.post("/api/upload", upload.single("photo"), (req, res) => {
         res.json({
           id,
           url: result.secure_url,
-          shareLink: `http://localhost:5000/api/photo/${id}`,
+          shareLink: `https://graduation-8rv9.onrender.com/api/photo/${id}`,
         });
       });
     }
@@ -54,5 +54,5 @@ app.get("/api/photo/:id", (req, res) => {
 });
 
 app.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+  console.log("Server running on https://graduation-8rv9.onrender.com");
 });
