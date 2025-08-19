@@ -7,5 +7,9 @@
     "multer": "^2.0.2",
     "nedb": "^1.8.0",
     "uuid": "^11.1.0"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
   }
 }
