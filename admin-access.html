@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access - Gallery Tốt Nghiệp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .admin-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div class="max-w-md w-full mx-4">
+        <div class="admin-card rounded-2xl shadow-2xl p-8 text-white text-center">
+            <div class="mb-6">
+                <div class="text-6xl mb-4">🎓</div>
+                <h1 class="text-2xl font-bold mb-2">Admin Access</h1>
+                <p class="text-blue-100">Gallery Tốt Nghiệp 2025</p>
+            </div>
+            
+            <div class="space-y-4">
+                <a href="admin.html" class="block w-full bg-white text-purple-600 font-semibold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors">
+                    🔧 Quản lý Admin
+                </a>
+                
+                <a href="index.html" class="block w-full bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 transition-colors">
+                    📸 Xem Gallery
+                </a>
+                
+                <div class="mt-6 pt-6 border-t border-purple-300">
+                    <p class="text-sm text-purple-100 mb-2">Quick Access URLs:</p>
+                    <div class="text-xs space-y-1">
+                        <div class="bg-black/20 p-2 rounded">
+                            <span class="text-purple-200">Admin:</span> 
+                            <span class="text-white" id="adminUrl">...</span>
+                        </div>
+                        <div class="bg-black/20 p-2 rounded">
+                            <span class="text-purple-200">Public:</span> 
+                            <span class="text-white" id="publicUrl">...</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="copyUrls()" class="mt-3 text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded">
+                        📋 Copy URLs
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-6 text-center text-gray-600 text-sm">
+            <p>💡 <strong>Tip:</strong> Bookmark trang này để truy cập nhanh!</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-populate URLs
+        document.addEventListener('DOMContentLoaded', function() {
+            const baseUrl = window.location.origin + window.location.pathname.replace('admin-access.html', '');
+            document.getElementById('adminUrl').textContent = baseUrl + 'admin.html';
+            document.getElementById('publicUrl').textContent = baseUrl + 'index.html';
+        });
+
+        function copyUrls() {
+            const adminUrl = document.getElementById('adminUrl').textContent;
+            const publicUrl = document.getElementById('publicUrl').textContent;
+            const urls = `Admin: ${adminUrl}\nPublic: ${publicUrl}`;
+            
+            navigator.clipboard.writeText(urls).then(() => {
+                alert('✅ Đã copy URLs!');
+            }).catch(() => {
+                alert('❌ Không thể copy URLs');
+            });
+        }
+    </script>
+</body>
+</html>

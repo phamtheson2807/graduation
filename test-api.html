@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test ImgBB API</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f2f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .info { background: #d1ecf1; color: #0c5460; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        input[type="file"] { margin: 10px 0; }
+        .result { margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        img { max-width: 100%; height: auto; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test ImgBB API Upload</h1>
+        
+        <div class="info">
+            <h3>✅ API Key đã được cấu hình:</h3>
+            <p><strong>API Key:</strong> a9d67b722b0b6fef72a5392838ce78da</p>
+            <p><strong>Status:</strong> <span id="apiStatus">Đang kiểm tra...</span></p>
+        </div>
+        
+        <div>
+            <h3>📤 Test Upload Ảnh:</h3>
+            <input type="file" id="testFile" accept="image/*">
+            <button onclick="testUpload()">Upload Test</button>
+            <button onclick="testAPIConnection()">Test API Connection</button>
+        </div>
+        
+        <div id="result" class="result" style="display: none;">
+            <h3>📋 Kết quả:</h3>
+            <div id="resultContent"></div>
+        </div>
+        
+        <div class="info">
+            <h3>📝 Thông tin API:</h3>
+            <p>• <strong>Service:</strong> ImgBB (miễn phí)</p>
+            <p>• <strong>Limit:</strong> Unlimited uploads</p>
+            <p>• <strong>Max file size:</strong> 32MB</p>
+            <p>• <strong>Supported formats:</strong> JPG, PNG, GIF, BMP, WEBP</p>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'a9d67b722b0b6fef72a5392838ce78da';
+        const UPLOAD_URL = 'https://api.imgbb.com/1/upload';
+        
+        // Test API connection
+        async function testAPIConnection() {
+            const statusEl = document.getElementById('apiStatus');
+            const resultEl = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            
+            try {
+                statusEl.textContent = 'Đang kiểm tra kết nối...';
+                
+                // Test with a simple pixel image
+                const testImageData = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+                
+                const formData = new FormData();
+                formData.append('key', API_KEY);
+                formData.append('image', testImageData);
+                formData.append('name', 'test_connection');
+                
+                const response = await fetch(UPLOAD_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusEl.innerHTML = '🟢 API hoạt động tốt!';
+                    resultContent.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Kết nối API thành công!</h4>
+                            <p><strong>Response:</strong> ${JSON.stringify(result, null, 2)}</p>
+                        </div>
+                    `;
+                } else {
+                    statusEl.innerHTML = '🔴 API có lỗi!';
+                    resultContent.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Lỗi API:</h4>
+                            <p><strong>Error:</strong> ${result.error?.message || 'Unknown error'}</p>
+                            <p><strong>Full Response:</strong> ${JSON.stringify(result, null, 2)}</p>
+                        </div>
+                    `;
+                }
+                
+                resultEl.style.display = 'block';
+                
+            } catch (error) {
+                statusEl.innerHTML = '🔴 Không thể kết nối!';
+                resultContent.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Lỗi kết nối:</h4>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Kiểm tra internet và CORS policy.</p>
+                    </div>
+                `;
+                resultEl.style.display = 'block';
+            }
+        }
+        
+        // Test file upload
+        async function testUpload() {
+            const fileInput = document.getElementById('testFile');
+            const resultEl = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            
+            if (!fileInput.files[0]) {
+                alert('Vui lòng chọn một file ảnh!');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            
+            try {
+                resultContent.innerHTML = '<div class="info">⏳ Đang upload...</div>';
+                resultEl.style.display = 'block';
+                
+                const formData = new FormData();
+                formData.append('key', API_KEY);
+                formData.append('image', file);
+                formData.append('name', `test_${Date.now()}`);
+                
+                const response = await fetch(UPLOAD_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    resultContent.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Upload thành công!</h4>
+                            <p><strong>File:</strong> ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)</p>
+                            <p><strong>URL:</strong> <a href="${result.data.url}" target="_blank">${result.data.url}</a></p>
+                            <p><strong>Thumbnail:</strong> <a href="${result.data.thumb.url}" target="_blank">${result.data.thumb.url}</a></p>
+                            <img src="${result.data.url}" alt="Uploaded image">
+                            <details>
+                                <summary>Chi tiết response</summary>
+                                <pre>${JSON.stringify(result, null, 2)}</pre>
+                            </details>
+                        </div>
+                    `;
+                } else {
+                    resultContent.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Upload thất bại!</h4>
+                            <p><strong>Error:</strong> ${result.error?.message || 'Unknown error'}</p>
+                            <pre>${JSON.stringify(result, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                resultContent.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Lỗi upload:</h4>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Auto test on load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(testAPIConnection, 1000);
+        });
+    </script>
+</body>
+</html>

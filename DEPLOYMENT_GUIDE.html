@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Hướng dẫn triển khai lên dataonline.vn</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 { color: #4a5568; text-align: center; }
+        h2 { color: #2d3748; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
+        .step { background: #f7fafc; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #4299e1; }
+        .warning { background: #fed7d7; border-left-color: #f56565; color: #742a2a; }
+        .success { background: #c6f6d5; border-left-color: #48bb78; color: #2f855a; }
+        .code { background: #2d3748; color: #e2e8f0; padding: 10px; border-radius: 5px; font-family: monospace; }
+        .checklist { list-style: none; padding: 0; }
+        .checklist li { margin: 5px 0; }
+        .checklist li:before { content: "☐ "; color: #4299e1; font-weight: bold; }
+        .highlight { background: #fef5e7; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Triển khai dự án Gallery Tốt Nghiệp lên dataonline.vn</h1>
+        
+        <div class="step success">
+            <h3>✅ Package đã sẵn sàng!</h3>
+            <p>Tất cả file cần thiết đã được chuẩn bị trong thư mục <strong>deploy-package</strong></p>
+        </div>
+
+        <h2>📋 Checklist trước khi triển khai</h2>
+        <ul class="checklist">
+            <li>Đăng ký hosting tại dataonline.vn</li>
+            <li>Có thông tin FTP/File Manager</li>
+            <li>Đăng ký ImgBB API (miễn phí)</li>
+            <li>Chuẩn bị mật khẩu admin mạnh</li>
+        </ul>
+
+        <h2>🔧 Bước 1: Cấu hình API upload ảnh</h2>
+        <div class="step">
+            <p><strong>1.1.</strong> Đăng ký tài khoản miễn phí tại: <a href="https://imgbb.com/" target="_blank">https://imgbb.com/</a></p>
+            <p><strong>1.2.</strong> Vào phần "API" và copy API key</p>
+            <p><strong>1.3.</strong> Mở file <code>api-config.js</code> trong deploy-package</p>
+            <p><strong>1.4.</strong> Tìm dòng:</p>
+            <div class="code">IMGBB_API_KEY: 'your_imgbb_api_key_here'</div>
+            <p><strong>1.5.</strong> Thay <span class="highlight">'your_imgbb_api_key_here'</span> bằng API key thật</p>
+        </div>
+
+        <h2>🔒 Bước 2: Đặt mật khẩu admin</h2>
+        <div class="step">
+            <p><strong>2.1.</strong> Trong file <code>api-config.js</code>, tìm dòng:</p>
+            <div class="code">DEFAULT_PASSWORD: 'graduation2025'</div>
+            <p><strong>2.2.</strong> Đổi <span class="highlight">'graduation2025'</span> thành mật khẩu mạnh của bạn</p>
+            <p><strong>Ví dụ:</strong> <code>DEFAULT_PASSWORD: 'MyStrong2025!@#'</code></p>
+        </div>
+
+        <div class="step warning">
+            <h3>⚠️ Lưu ý bảo mật</h3>
+            <p>• Không chia sẻ mật khẩu admin<br>
+            • Có thể đổi tên file admin.html thành tên khác<br>
+            • Backup thường xuyên</p>
+        </div>
+
+        <h2>📤 Bước 3: Upload lên hosting</h2>
+        <div class="step">
+            <p><strong>3.1.</strong> Đăng nhập hosting control panel dataonline.vn</p>
+            <p><strong>3.2.</strong> Vào File Manager hoặc dùng FTP client</p>
+            <p><strong>3.3.</strong> Upload tất cả file trong <strong>deploy-package</strong> vào thư mục:</p>
+            <div class="code">public_html/</div>
+            <p><strong>3.4.</strong> Đảm bảo cấu trúc file như sau:</p>
+            <div class="code">
+public_html/<br>
+├── index.html<br>
+├── gallery.html<br>
+├── admin.html<br>
+├── style.css<br>
+├── script.js<br>
+├── gallery.js<br>
+├── admin.js<br>
+├── api-config.js<br>
+├── phepmau.mp3<br>
+├── .htaccess<br>
+└── robots.txt
+            </div>
+        </div>
+
+        <h2>🌐 Bước 4: Cấu hình domain</h2>
+        <div class="step">
+            <p><strong>4.1.</strong> Trong hosting control panel, cấu hình:</p>
+            <ul>
+                <li>✅ SSL Certificate (HTTPS)</li>
+                <li>✅ GZIP Compression</li>
+                <li>✅ CDN (nếu có)</li>
+            </ul>
+            <p><strong>4.2.</strong> Domain sẽ có dạng:</p>
+            <div class="code">https://yourname.dataonline.vn</div>
+        </div>
+
+        <h2>🧪 Bước 5: Test website</h2>
+        <div class="step">
+            <p><strong>5.1.</strong> Truy cập: <code>https://yourname.dataonline.vn</code></p>
+            <p><strong>5.2.</strong> Kiểm tra:</p>
+            <ul>
+                <li>✅ Trang chủ hiển thị đẹp</li>
+                <li>✅ Gallery load được ảnh demo</li>
+                <li>✅ Nhạc nền hoạt động</li>
+                <li>✅ Responsive trên mobile</li>
+            </ul>
+            <p><strong>5.3.</strong> Test admin tại: <code>https://yourname.dataonline.vn/admin.html</code></p>
+            <ul>
+                <li>✅ Đăng nhập với mật khẩu đã đặt</li>
+                <li>✅ Upload ảnh thành công</li>
+                <li>✅ Xóa ảnh hoạt động</li>
+                <li>✅ Share link copy được</li>
+            </ul>
+        </div>
+
+        <h2>🎉 Bước 6: Chia sẻ với mọi người</h2>
+        <div class="step success">
+            <p><strong>Link chia sẻ công khai:</strong></p>
+            <div class="code">https://yourname.dataonline.vn</div>
+            <p><strong>Link admin (chỉ cho bạn):</strong></p>
+            <div class="code">https://yourname.dataonline.vn/admin.html</div>
+            <p>Có thể tạo QR code và share trên Facebook, Zalo!</p>
+        </div>
+
+        <h2>❓ Troubleshooting</h2>
+        <div class="step">
+            <p><strong>Lỗi upload ảnh:</strong></p>
+            <ul>
+                <li>Kiểm tra ImgBB API key đã đúng chưa</li>
+                <li>File ảnh có vượt quá 5MB không</li>
+                <li>Mở F12 Console xem lỗi gì</li>
+            </ul>
+            
+            <p><strong>Không vào được admin:</strong></p>
+            <ul>
+                <li>Kiểm tra mật khẩu đã đổi đúng chưa</li>
+                <li>Clear cache browser và thử lại</li>
+                <li>Kiểm tra file admin.html đã upload chưa</li>
+            </ul>
+            
+            <p><strong>Website không hiển thị:</strong></p>
+            <ul>
+                <li>Kiểm tra DNS đã trỏ đúng chưa</li>
+                <li>Đợi 24h để DNS propagate</li>
+                <li>Liên hệ support dataonline.vn</li>
+            </ul>
+        </div>
+
+        <h2>📞 Hỗ trợ</h2>
+        <div class="step">
+            <p><strong>dataonline.vn support:</strong></p>
+            <ul>
+                <li>📧 Email: support@dataonline.vn</li>
+                <li>📞 Hotline: (028) 7300 6200</li>
+                <li>💬 Live chat trên website</li>
+            </ul>
+        </div>
+
+        <div class="step success">
+            <h3>🎓 Chúc mừng!</h3>
+            <p>Website gallery tốt nghiệp của bạn đã sẵn sàng online! 🚀</p>
+            <p>Hãy chia sẻ những khoảnh khắc đẹp với bạn bè và gia đình!</p>
+        </div>
+    </div>
+</body>
+</html>

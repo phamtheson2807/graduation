@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Tốt Nghiệp 2025 🎓</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .share-notice {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Public View Notice -->
+    <div class="share-notice text-white py-3 px-6 text-center">
+        <div class="flex items-center justify-center space-x-2">
+            <span class="text-lg">👥</span>
+            <span class="font-medium">Chế độ xem công khai - Gallery Tốt Nghiệp 2025</span>
+            <span class="text-lg">🎓</span>
+        </div>
+        <p class="text-sm text-blue-100 mt-1">Bạn đang xem gallery được chia sẻ</p>
+    </div>
+
+    <!-- Gallery Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">🎉 Kỷ niệm tốt nghiệp</h1>
+            <p class="text-gray-600">Những khoảnh khắc đáng nhớ nhất trong cuộc đời</p>
+        </div>
+
+        <!-- Photo Grid -->
+        <div id="photoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Photos will be loaded here -->
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="text-center py-12">
+            <div class="text-4xl mb-4">📸</div>
+            <p class="text-gray-500">Đang tải ảnh...</p>
+        </div>
+
+        <!-- No photos message -->
+        <div id="noPhotos" class="text-center py-12 hidden">
+            <div class="text-6xl mb-4">🎓</div>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">Chưa có ảnh nào</h3>
+            <p class="text-gray-500">Gallery sẽ sớm được cập nhật!</p>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center">
+        <div class="max-w-4xl max-h-screen p-4 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-2xl bg-black/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-black/70">
+                ✕
+            </button>
+            <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg">
+            <div class="text-white text-center mt-4">
+                <h3 id="modalTitle" class="text-lg font-semibold"></h3>
+                <p id="modalCaption" class="text-sm text-gray-300 mt-1"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-lg font-semibold mb-2">🎓 Kỷ niệm tốt nghiệp 2025</p>
+            <p class="text-gray-400 text-sm">Những khoảnh khắc đáng nhớ được lưu giữ mãi mãi</p>
+        </div>
+    </footer>
+
+    <script src="api-config-hosting.js"></script>
+    <script>
+        // Wait for API to be ready
+        function waitForAPI() {
+            return new Promise((resolve) => {
+                const checkAPI = () => {
+                    if (typeof window.photoAPI !== 'undefined') {
+                        resolve();
+                    } else {
+                        setTimeout(checkAPI, 100);
+                    }
+                };
+                checkAPI();
+            });
+        }
+
+        // Load and display photos
+        async function loadPhotos() {
+            try {
+                await waitForAPI();
+                
+                const result = await window.photoAPI.getPhotos();
+                const photoGrid = document.getElementById('photoGrid');
+                const loading = document.getElementById('loading');
+                const noPhotos = document.getElementById('noPhotos');
+                
+                loading.classList.add('hidden');
+                
+                if (result.success && result.photos.length > 0) {
+                    photoGrid.innerHTML = '';
+                    
+                    result.photos.forEach(photo => {
+                        const photoCard = createPhotoCard(photo);
+                        photoGrid.appendChild(photoCard);
+                    });
+                    
+                    // Increment view count
+                    window.photoAPI.incrementViews();
+                } else {
+                    noPhotos.classList.remove('hidden');
+                }
+                
+            } catch (error) {
+                console.error('Error loading photos:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-4xl mb-4">❌</div>
+                        <p class="text-gray-500">Lỗi khi tải ảnh</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Create photo card
+        function createPhotoCard(photo) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer';
+            card.onclick = () => openModal(photo);
+            
+            card.innerHTML = `
+                <div class="aspect-square overflow-hidden">
+                    <img src="${photo.thumb || photo.src}" alt="${photo.title}" 
+                         class="w-full h-full object-cover hover:scale-105 transition-transform">
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-800 mb-2">${photo.title}</h3>
+                    <p class="text-sm text-gray-600 mb-2">${photo.caption}</p>
+                    <div class="flex justify-between items-center text-xs text-gray-500">
+                        <span class="bg-purple-100 text-purple-700 px-2 py-1 rounded">${getCategoryName(photo.category)}</span>
+                        <span>${formatDate(photo.uploadDate)}</span>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Open image modal
+        function openModal(photo) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalCaption = document.getElementById('modalCaption');
+            
+            modalImage.src = photo.src;
+            modalImage.alt = photo.title;
+            modalTitle.textContent = photo.title;
+            modalCaption.textContent = photo.caption;
+            
+            modal.classList.remove('hidden');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+
+        // Utility functions
+        function getCategoryName(category) {
+            const categories = {
+                'ceremony': 'Lễ tốt nghiệp',
+                'friends': 'Bạn bè',
+                'family': 'Gia đình',
+                'solo': 'Cá nhân'
+            };
+            return categories[category] || 'Khác';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('vi-VN');
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Close modal on background click
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadPhotos);
+    </script>
+</body>
+</html>
